@@ -19,9 +19,9 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 data class ClockStyle (
-    val hourHandLength: Dp = 40.dp,
-    val minHandLength: Dp = 70.dp,
-    val secondHandLength: Dp = 90.dp,
+    val hourHandLength: Dp = 58.dp,
+    val minHandLength: Dp = 80.dp,
+    val secondHandLength: Dp = 80.dp,
     val clockRadius: Dp = 100.dp,
     val hourHandColor: Color = Color.Black,
     val secondHandColor: Color = Color.Red,
@@ -44,7 +44,10 @@ sealed class LineType {
 @Composable
 fun CanvasClock(
     modifier: Modifier,
-    clockStyle: ClockStyle = ClockStyle()
+    clockStyle: ClockStyle = ClockStyle(),
+    hours: Int,
+    minutes: Int,
+    seconds: Int
 ) {
     var center by remember { mutableStateOf(Offset.Zero) }
     var angle by remember { mutableStateOf(0f) }
@@ -71,8 +74,8 @@ fun CanvasClock(
         }
         //draw line
         //Formula for radians
-        //x = radius * cos(angle)
-        //y = radius * sin(angle)
+        //x = radius * cos(angle in radians)
+        //y = radius * sin(angle in radians)
         for (i in 1..60) {
             val lineType = when(i % 5 == 0) {
                 true -> LineType.ThirtyMin
@@ -102,6 +105,49 @@ fun CanvasClock(
                 lineWidth.toPx()
             )
         }
+
+        //draw Hour Min Second hands
+        //seconds
+        //x = radius * cos(angle in radians)
+        //y = radius * sin(angle in radians)
+        drawLine(
+            color = clockStyle.secondHandColor,
+            start = Offset(
+                center.x,
+                center.y
+            ),
+            end = Offset(
+                x = clockStyle.secondHandLength.toPx() * cos((seconds * 6f).toRadians()) + center.x,
+                y = clockStyle.secondHandLength.toPx() * sin((seconds * 6f).toRadians()) + center.y
+            ),
+            strokeWidth = 2.dp.toPx()
+        )
+        //minutes
+        drawLine(
+            color = clockStyle.minHandColor,
+            start = Offset(
+                center.x,
+                center.y
+            ),
+            end = Offset(
+                x = clockStyle.minHandLength.toPx() * cos((minutes * 0.25f).toRadians()) + center.x,
+                y = clockStyle.minHandLength.toPx() * sin((minutes * 0.25f).toRadians()) + center.y
+            ),
+            strokeWidth = 3.dp.toPx()
+        )
+        //hours
+        drawLine(
+            color = clockStyle.hourHandColor,
+            start = Offset(
+                center.x,
+                center.y
+            ),
+            end = Offset(
+                x = clockStyle.hourHandLength.toPx() * cos((hours* 30f).toRadians()) + center.x,
+                y = clockStyle.hourHandLength.toPx() * sin((hours * 030f).toRadians()) + center.y
+            ),
+            strokeWidth = 3.5.dp.toPx()
+        )
     }
 }
 
