@@ -21,10 +21,9 @@ class MyViewModel: ViewModel() {
 
     init {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                while (true) {
-                    _time.emit(LocalDateTime.now())
-                }
+              while (true) {
+                   _time.emit(LocalDateTime.now())
+               }
             }
         }
     }
