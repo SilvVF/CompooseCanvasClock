@@ -33,15 +33,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    var time by remember {
-                        mutableStateOf(LocalDateTime.now())
-                    }
+                    val time by viewmodel.time.collectAsState()
                     val coroutineScope = rememberCoroutineScope()
-                    LaunchedEffect(key1 = true) {
-                        viewModel.time.collectLatest {
-                            time = it
-                        }
-                    }
+                  
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Box {
                             CanvasClock(
